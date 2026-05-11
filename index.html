@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAKS & CO</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:#050505;
+  color:white;
+  overflow-x:hidden;
+}
+
+.navbar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:9999;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 55px;
+  background:rgba(0,0,0,0.28);
+  backdrop-filter:blur(18px);
+}
+
+.logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:4px;
+  white-space:nowrap;
+}
+
+nav a{
+  margin-left:28px;
+  color:#d7d7d7;
+  text-decoration:none;
+  font-size:14px;
+  letter-spacing:1px;
+}
+
+nav a:hover{
+  color:#8b2038;
+}
+
+.hero{
+  min-height:100vh;
+  width:100%;
+  position:relative;
+  overflow:hidden;
+  background:#000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:120px 24px 80px;
+}
+
+.hero-video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:0;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:linear-gradient(to bottom, rgba(0,0,0,0.48), rgba(0,0,0,0.92));
+}
+
+.hero-content{
+  position:relative;
+  z-index:5;
+  text-align:center;
+  max-width:820px;
+}
+
+.subtitle,
+.section-tag{
+  font-size:12px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:#8b2038;
+  margin-bottom:18px;
+}
+
+.hero h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px, 8vw, 92px);
+  line-height:0.95;
+  font-weight:600;
+  margin-bottom:26px;
+}
+
+.desc{
+  font-size:clamp(15px, 2vw, 18px);
+  line-height:1.8;
+  color:#d0d0d0;
+  margin:0 auto;
+  max-width:620px;
+}
+
+button{
+  margin-top:34px;
+  padding:15px 34px;
+  border:0;
+  border-radius:50px;
+  background:#8b2038;
+  color:white;
+  font-size:13px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#a8273f;
+}
+
+.articles-scroll{
+  height:300vh;
+  position:relative;
+  background:#050505;
+}
+
+.articles-sticky{
+  position:sticky;
+  top:0;
+  height:100vh;
+  width:100%;
+  overflow:hidden;
+}
+
+.article-bg{
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  opacity:0;
+  transition:opacity 0.55s ease;
+  z-index:1;
+}
+
+.article-bg.active{
+  opacity:1;
+}
+
+.article-bg::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom, rgba(0,0,0,0.42), rgba(0,0,0,0.88));
+}
+
+.articles-content{
+  position:relative;
+  z-index:5;
+  height:100%;
+  display:flex;
+  align-items:center;
+  padding:0 80px;
+}
+
+.article-text{
+  max-width:680px;
+}
+
+.article-text h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(42px, 7vw, 76px);
+  line-height:1;
+  margin-bottom:24px;
+}
+
+.article-text p{
+  max-width:560px;
+  font-size:17px;
+  line-height:1.9;
+  color:#d0d0d0;
+}
+
+/* MAIN 3D SECTION */
+.watch-3d-section{
+  min-height:100vh;
+  width:100%;
+  background:#080808;
+  position:relative;
+  overflow:hidden;
+  padding:100px 70px 40px;
+}
+
+.watch-3d-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 75% center, rgba(139,32,56,0.24) 0%, transparent 58%);
+  pointer-events:none;
+  z-index:1;
+}
+
+.watch-layout{
+  position:relative;
+  z-index:2;
+  min-height:calc(100vh - 160px);
+  display:grid;
+  grid-template-columns:0.9fr 1.1fr;
+  gap:40px;
+  align-items:center;
+}
+
+.watch-info{
+  max-width:560px;
+}
+
+.watch-info h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(44px, 6vw, 76px);
+  line-height:0.95;
+  margin-bottom:24px;
+}
+
+.watch-info p{
+  color:#d0d0d0;
+  line-height:1.9;
+  font-size:17px;
+}
+
+.watch-stage{
+  position:relative;
+  height:76vh;
+  min-height:500px;
+  background:transparent;
+  border:none;
+  overflow:visible;
+}
+
+#watchCanvas{
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.small-guide{
+  position:relative;
+  z-index:3;
+  text-align:center;
+  font-size:12px;
+  color:#8d8d8d;
+  letter-spacing:1px;
+  margin-top:15px;
+}
+
+/* PRODUCT CARDS */
+.products-section{
+  padding:70px 80px 30px;
+  background:#050505;
+}
+
+.products-header{
+  text-align:center;
+  max-width:760px;
+  margin:0 auto 60px;
+}
+
+.products-header h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(44px, 6vw, 76px);
+  line-height:1;
+  margin-bottom:18px;
+}
+
+.products-header p{
+  color:#cfcfcf;
+  line-height:1.8;
+}
+
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:35px;
+}
+
+.product-card{
+  background:transparent;
+  border:none;
+  box-shadow:none;
+  padding:0;
+  text-align:center;
+}
+
+.product-canvas-wrap{
+  width:100%;
+  height:220px;
+  background:transparent;
+  overflow:hidden;
+}
+
+.product-canvas{
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.product-card h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:34px;
+  margin-top:-10px;
+  margin-bottom:8px;
+}
+
+.product-card p{
+  color:#bdbdbd;
+  line-height:1.7;
+  max-width:320px;
+  margin:0 auto;
+}
+.product-card{
+  margin-bottom:-20px;
+}
+.featured{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:60px;
+  padding:120px 80px;
+  background:#050505;
+}
+
+.featured h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(42px, 5vw, 62px);
+  line-height:1;
+  margin-bottom:25px;
+}
+
+.featured p{
+  line-height:1.9;
+  color:#c5c5c5;
+}
+
+.right{
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+}
+
+.card{
+  padding:45px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.045);
+  backdrop-filter:blur(14px);
+}
+
+.card h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:34px;
+  margin-bottom:10px;
+}
+
+.banner{
+  min-height:70vh;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:url("images/p3.png") center/cover no-repeat;
+  padding:80px 24px;
+}
+
+.banner::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom, rgba(0,0,0,0.58), rgba(0,0,0,0.86));
+}
+
+.banner-content{
+  position:relative;
+  z-index:2;
+}
+
+.banner h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(42px, 7vw, 72px);
+  margin-bottom:18px;
+}
+
+.grid-section{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:30px;
+  padding:100px 80px;
+  background:#050505;
+}
+
+.grid-card{
+  padding:45px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.04);
+}
+
+.grid-card h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(32px, 4vw, 42px);
+  margin-bottom:15px;
+}
+
+.grid-card p{
+  line-height:1.8;
+  color:#bdbdbd;
+}
+
+footer{
+  padding:70px 60px;
+  background:#020202;
+  text-align:center;
+  color:#9a9a9a;
+}
+
+.footer-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:42px;
+  letter-spacing:5px;
+  margin-bottom:15px;
+}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .watch-3d-section{
+    padding:90px 34px 35px;
+  }
+
+  .watch-layout{
+    grid-template-columns:1fr;
+  }
+
+  .watch-stage{
+    height:60vh;
+    min-height:440px;
+  }
+
+  .products-section,
+  .featured,
+  .grid-section{
+    padding:90px 34px;
+  }
+
+  .product-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:768px){
+  .navbar{
+    padding:14px 22px;
+  }
+
+  .logo{
+    font-size:22px;
+    letter-spacing:3px;
+  }
+
+  nav{
+    display:none;
+  }
+
+  .hero{
+    min-height:92vh;
+  }
+
+  .articles-scroll{
+    height:240vh;
+  }
+
+  .articles-content{
+    padding:0 24px;
+  }
+
+  .article-text p{
+    font-size:15px;
+  }
+
+  .watch-3d-section{
+    padding:80px 18px 30px;
+  }
+
+  .watch-info p{
+    font-size:15px;
+  }
+
+  .watch-stage{
+    height:420px;
+    min-height:420px;
+  }
+
+  .product-grid{
+    grid-template-columns:1fr;
+    gap:55px;
+  }
+
+  .product-canvas-wrap{
+    height:300px;
+  }
+
+  .products-section,
+  .featured,
+  .grid-section{
+    grid-template-columns:1fr;
+    padding:70px 18px;
+  }
+
+  .featured{
+    grid-template-columns:1fr;
+  }
+
+  .card,
+  .grid-card{
+    padding:30px;
+  }
+
+  footer{
+    padding:50px 20px;
+  }
+}
+
+@media(max-width:420px){
+  .subtitle,
+  .section-tag{
+    letter-spacing:2px;
+    font-size:10px;
+  }
+
+  button{
+    width:100%;
+    padding:14px 20px;
+  }
+
+  .watch-stage{
+    height:350px;
+    min-height:350px;
+  }
+
+  .product-canvas-wrap{
+    height:260px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+  <div class="logo">HAKS & CO</div>
+  <nav>
+    <a href="#">Collections</a>
+    <a href="#">Craftsmanship</a>
+    <a href="#">Legacy</a>
+    <a href="#">Boutiques</a>
+    <a href="#">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="watch.mp4" type="video/mp4">
+  </video>
+
+  <div class="overlay"></div>
+
+  <div class="hero-content">
+    <p class="subtitle">Prestige Beyond Time</p>
+    <h1>Luxury Watches Reimagined</h1>
+    <p class="desc">Precision engineered masterpieces crafted for collectors, leaders, and visionaries.</p>
+    <button>Discover Collection</button>
+  </div>
+</section>
+
+<section class="articles-scroll">
+  <div class="articles-sticky">
+    <div class="article-bg active" style="background-image:url('images/p2.png');"></div>
+    <div class="article-bg" style="background-image:url('images/p1.png');"></div>
+    <div class="article-bg" style="background-image:url('images/p3.png');"></div>
+
+    <div class="articles-content">
+      <div class="article-text">
+        <p class="section-tag">Visual Legacy</p>
+        <h2>Every Scroll Reveals Another Statement</h2>
+        <p>Explore a cinematic showcase where each background changes smoothly while the message remains focused and elegant.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="watch-3d-section" id="watch-section">
+  <div class="watch-layout">
+    <div class="watch-info">
+      <p class="section-tag">Interactive Preview</p>
+      <h2>The Masterpiece Up Close</h2>
+      <p>
+        A refined 3D presentation of modern luxury watchmaking.
+        The model remains on the right side with a clean plain background,
+        while the story and product identity stay focused on the left.
+      </p>
+
+      <button id="activateMotionBtn">Activate Scroll Motion</button>
+    </div>
+
+    <div class="watch-stage" id="watchStage">
+      <canvas id="watchCanvas"></canvas>
+    </div>
+  </div>
+
+  <p class="small-guide">Click the button to activate scroll based 3D movement. Drag the model to rotate manually.</p>
+</section>
+
+<section class="products-section">
+  <div class="products-header">
+    <p class="section-tag">Featured Models</p>
+    <h2>Signature 3D Collection</h2>
+    <p>Each product card displays a spinning 3D watch model with a clean transparent layout.</p>
+  </div>
+
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-canvas-wrap">
+        <canvas class="product-canvas"></canvas>
+      </div>
+      <h3>Imperial Chronograph</h3>
+      <p>Swiss automatic movement with a bold collector focused presence.</p>
+    </div>
+
+    <div class="product-card">
+      <div class="product-canvas-wrap">
+        <canvas class="product-canvas"></canvas>
+      </div>
+      <h3>Royal Heritage</h3>
+      <p>Elegant luxury design inspired by timeless watchmaking tradition.</p>
+    </div>
+
+    <div class="product-card">
+      <div class="product-canvas-wrap">
+        <canvas class="product-canvas"></canvas>
+      </div>
+      <h3>Maroon Elite</h3>
+      <p>A statement piece created for sophistication, precision, and power.</p>
+    </div>
+  </div>
+</section>
+
+<section class="featured">
+  <div class="left">
+    <p class="section-tag">Signature Collection</p>
+    <h2>Timeless Maroon Elegance</h2>
+    <p>Inspired by heritage luxury watch houses with a bold contemporary presence. Designed to feel powerful, elite, and unforgettable.</p>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h3>Swiss Movement</h3>
+      <p>Engineered for accuracy, endurance, and long lasting performance.</p>
+    </div>
+    <div class="card">
+      <h3>Collector Finish</h3>
+      <p>Premium detailing made for people who value distinctive design.</p>
+    </div>
+  </div>
+</section>
+
+<section class="banner">
+  <div class="banner-content">
+    <h2>Crafted For The Extraordinary</h2>
+    <p>A statement of success, sophistication, and timeless ambition.</p>
+  </div>
+</section>
+
+<section class="grid-section">
+  <div class="grid-card">
+    <h3>Precision</h3>
+    <p>Swiss-grade excellence refined to perfection.</p>
+  </div>
+  <div class="grid-card">
+    <h3>Luxury</h3>
+    <p>Premium finishes with deep maroon sophistication.</p>
+  </div>
+  <div class="grid-card">
+    <h3>Heritage</h3>
+    <p>Inspired by iconic watchmaking traditions.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">HAKS & CO</div>
+  <p>Luxury Watch House © 2026</p>
+</footer>
+
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+/* SECTION 2 IMAGE SCROLL */
+const scrollSection = document.querySelector(".articles-scroll");
+const bgImages = document.querySelectorAll(".article-bg");
+
+function updateScrollImage(){
+  const rect = scrollSection.getBoundingClientRect();
+  const totalScroll = scrollSection.offsetHeight - window.innerHeight;
+  let progress = -rect.top / totalScroll;
+
+  progress = Math.max(0, Math.min(0.999, progress));
+
+  const index = Math.floor(progress * bgImages.length);
+
+  bgImages.forEach((img, i) => {
+    img.classList.toggle("active", i === index);
+  });
+}
+
+window.addEventListener("scroll", updateScrollImage, { passive:true });
+window.addEventListener("resize", updateScrollImage);
+window.addEventListener("load", updateScrollImage);
+updateScrollImage();
+
+/* SHARED MODEL PATH */
+const MODEL_PATH = "./model/watch.glb";
+
+/* MAIN 3D MODEL */
+const canvas = document.getElementById("watchCanvas");
+const watchStage = document.getElementById("watchStage");
+const activateMotionBtn = document.getElementById("activateMotionBtn");
+
+let motionEnabled = false;
+
+activateMotionBtn.addEventListener("click", function(){
+  motionEnabled = !motionEnabled;
+  activateMotionBtn.textContent = motionEnabled ? "Scroll Motion Activated" : "Activate Scroll Motion";
+});
+
+const mainScene = new THREE.Scene();
+
+const mainCamera = new THREE.PerspectiveCamera(
+  45,
+  watchStage.clientWidth / watchStage.clientHeight,
+  0.1,
+  1000
+);
+
+mainCamera.position.set(0, 0, 8);
+
+const mainRenderer = new THREE.WebGLRenderer({
+  canvas: canvas,
+  alpha: true,
+  antialias: true
+});
+
+mainRenderer.setSize(watchStage.clientWidth, watchStage.clientHeight);
+mainRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+mainRenderer.outputColorSpace = THREE.SRGBColorSpace;
+
+mainScene.add(new THREE.AmbientLight(0xffffff, 3));
+
+const mainLight1 = new THREE.DirectionalLight(0xffffff, 5);
+mainLight1.position.set(5, 8, 8);
+mainScene.add(mainLight1);
+
+const mainLight2 = new THREE.DirectionalLight(0xffffff, 3);
+mainLight2.position.set(-5, 3, 5);
+mainScene.add(mainLight2);
+
+const mainLight3 = new THREE.DirectionalLight(0x8b2038, 2);
+mainLight3.position.set(0, -5, 5);
+mainScene.add(mainLight3);
+
+const mainControls = new OrbitControls(mainCamera, mainRenderer.domElement);
+mainControls.enableDamping = true;
+mainControls.autoRotate = true;
+mainControls.autoRotateSpeed = 1.2;
+mainControls.enablePan = false;
+mainControls.enableZoom = true;
+mainControls.minDistance = 3;
+mainControls.maxDistance = 20;
+
+let mainWatch = null;
+let mainBaseScale = 1;
+
+function fitObject(object, targetSize){
+  const box = new THREE.Box3().setFromObject(object);
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+
+  object.position.x -= center.x;
+  object.position.y -= center.y;
+  object.position.z -= center.z;
+
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const scale = targetSize / maxDim;
+
+  object.scale.setScalar(scale);
+
+  return scale;
+}
+
+function buildFallback(scene, targetSize){
+  const group = new THREE.Group();
+
+  const body = new THREE.Mesh(
+    new THREE.TorusGeometry(1.2, 0.18, 32, 120),
+    new THREE.MeshStandardMaterial({
+      color:0xd0d0d0,
+      metalness:0.9,
+      roughness:0.2
+    })
+  );
+
+  const dial = new THREE.Mesh(
+    new THREE.CircleGeometry(1, 80),
+    new THREE.MeshStandardMaterial({
+      color:0x111111,
+      metalness:0.4,
+      roughness:0.3
+    })
+  );
+
+  dial.position.z = 0.08;
+
+  const strap = new THREE.Mesh(
+    new THREE.BoxGeometry(0.65, 4, 0.16),
+    new THREE.MeshStandardMaterial({
+      color:0x222222,
+      metalness:0.5,
+      roughness:0.45
+    })
+  );
+
+  strap.position.z = -0.08;
+
+  group.add(strap);
+  group.add(body);
+  group.add(dial);
+
+  scene.add(group);
+  group.scale.setScalar(targetSize / 4);
+
+  return group;
+}
+
+const loader = new GLTFLoader();
+let loadedModel = null;
+
+loader.load(
+  MODEL_PATH,
+
+  function(gltf){
+    loadedModel = gltf.scene;
+
+    mainWatch = loadedModel.clone(true);
+    mainScene.add(mainWatch);
+
+    mainBaseScale = fitObject(mainWatch, 4);
+    mainWatch.rotation.x = 0.35;
+    mainWatch.rotation.z = -0.2;
+
+    createProductModels();
+
+    console.log("GLB MODEL LOADED SUCCESSFULLY");
+  },
+
+  function(xhr){
+    if(xhr.total){
+      console.log("Loading model:", Math.round((xhr.loaded / xhr.total) * 100) + "%");
+    }
+  },
+
+  function(error){
+    console.error("GLB MODEL FAILED TO LOAD:", error);
+
+    mainWatch = buildFallback(mainScene, 4);
+    mainBaseScale = 1;
+
+    createProductModels(true);
+  }
+);
+
+function updateMainModelByScroll(){
+  if(!mainWatch || !motionEnabled) return;
+
+  const rect = watchStage.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+
+  let progress = (windowHeight - rect.top) / (windowHeight + rect.height);
+  progress = Math.max(0, Math.min(1, progress));
+
+  mainWatch.rotation.y = -0.8 + progress * 1.6;
+  mainWatch.rotation.x = 0.15 + progress * 0.75;
+  mainWatch.position.x = -0.8 + progress * 1.6;
+  mainWatch.position.y = 0.35 - progress * 0.7;
+  mainWatch.scale.setScalar(mainBaseScale * (0.9 + progress * 0.22));
+}
+
+/* PRODUCT 3D CARDS */
+const productCanvases = document.querySelectorAll(".product-canvas");
+const productViewers = [];
+
+function createProductModels(useFallback = false){
+  productCanvases.forEach((productCanvas, index) => {
+    const wrap = productCanvas.parentElement;
+
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(
+      45,
+      wrap.clientWidth / wrap.clientHeight,
+      0.1,
+      1000
+    );
+
+    camera.position.set(0, 0, 7);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas: productCanvas,
+      alpha: true,
+      antialias: true
+    });
+
+    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 3));
+
+    const lightA = new THREE.DirectionalLight(0xffffff, 4);
+    lightA.position.set(5, 5, 5);
+    scene.add(lightA);
+
+    const lightB = new THREE.DirectionalLight(0x8b2038, 2);
+    lightB.position.set(-4, -2, 5);
+    scene.add(lightB);
+
+    let model;
+
+    if(useFallback || !loadedModel){
+      model = buildFallback(scene, 2.7);
+    }else{
+      model = loadedModel.clone(true);
+      scene.add(model);
+      fitObject(model, 2.7);
+    }
+
+    model.rotation.x = 0.35;
+    model.rotation.z = -0.18;
+    model.rotation.y = index * 0.7;
+
+    productViewers.push({
+      scene,
+      camera,
+      renderer,
+      model,
+      wrap,
+      speed:0.006 + index * 0.002
+    });
+  });
+}
+
+/* ANIMATE ALL 3D */
+function animate(){
+  requestAnimationFrame(animate);
+
+  if(mainWatch){
+    if(motionEnabled){
+      updateMainModelByScroll();
+    }else{
+      mainWatch.rotation.y += 0.004;
+    }
+  }
+
+  mainControls.update();
+  mainRenderer.render(mainScene, mainCamera);
+
+  productViewers.forEach(viewer => {
+    viewer.model.rotation.y += viewer.speed;
+    viewer.renderer.render(viewer.scene, viewer.camera);
+  });
+}
+
+animate();
+
+/* RESIZE */
+function resizeMainRenderer(){
+  const width = watchStage.clientWidth;
+  const height = watchStage.clientHeight;
+
+  mainCamera.aspect = width / height;
+  mainCamera.updateProjectionMatrix();
+
+  mainRenderer.setSize(width, height);
+}
+
+function resizeProductRenderers(){
+  productViewers.forEach(viewer => {
+    const width = viewer.wrap.clientWidth;
+    const height = viewer.wrap.clientHeight;
+
+    viewer.camera.aspect = width / height;
+    viewer.camera.updateProjectionMatrix();
+
+    viewer.renderer.setSize(width, height);
+  });
+}
+
+window.addEventListener("resize", function(){
+  resizeMainRenderer();
+  resizeProductRenderers();
+});
+
+resizeMainRenderer();
+</script>
+
+</body>
+</html>
